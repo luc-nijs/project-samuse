@@ -15,6 +15,15 @@ if (SHEET_CSV_URL) {
 const shown = current(news);
 ---
 <Base title="Home" path="/">
+  <section class="news" id="news" hidden={!shown.length}>
+    <div class="wrap">
+      <div class="news-box">
+        <h2>News</h2>
+        <div id="news-list" set:html={newsHtml(shown)}></div>
+      </div>
+    </div>
+  </section>
+
   <section class="hl">
     <div class="wrap">
       <h2>Highlights</h2>
@@ -39,15 +48,6 @@ const shown = current(news);
       <p class="credit">Video: UniLu Media Center & Bahareh Behzadaval</p>
       <p class="fr">video with FRENCH subtitles: click <a href="/video">HERE</a></p>
       <p class="join"><a class="btn wide" href={JOIN_FORM} target="_blank" rel="noopener">Join our study - Register your interest</a></p>
-    </div>
-  </section>
-
-  <section class="news" id="news" hidden={!shown.length}>
-    <div class="wrap">
-      <div class="news-box">
-        <h2>News</h2>
-        <div id="news-list" set:html={newsHtml(shown)}></div>
-      </div>
     </div>
   </section>
 </Base>
