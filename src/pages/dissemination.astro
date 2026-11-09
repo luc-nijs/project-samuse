@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SHEETS, parseCSV, renderAll } from '../lib/dissemination.js';
+import { SHEETS, parseCSV, renderAll, countText } from '../lib/dissemination.js';
 import pubCsv from '../data/SAMUSE_publications.csv?raw';
 import lecCsv from '../data/SAMUSE_lectures.csv?raw';
 import evCsv from '../data/SAMUSE_events.csv?raw';
@@ -15,8 +15,9 @@ async function load(url, fallback) {
   }
   return parseCSV(fallback);
 }
+const pubs = await load(SHEETS.publications, pubCsv);
 const html = renderAll({
-  publications: await load(SHEETS.publications, pubCsv),
+  publications: pubs,
   lectures: await load(SHEETS.lectures, lecCsv),
   events: await load(SHEETS.events, evCsv),
 });
@@ -25,6 +26,13 @@ const html = renderAll({
   <section class="diss">
     <div class="wrap">
       <h2>Publications</h2>
+      <div class="pb-controls">
+        <span><label for="pb-group">Group by</label><select id="pb-group"><option value="year">year</option><option value="type">type</option></select></span>
+        <span><label for="pb-type">Type</label><select id="pb-type"><option value="">all</option></select></span>
+        <span><label for="pb-from">From</label><select id="pb-from"></select><label for="pb-to" class="to">to</label><select id="pb-to"></select></span>
+        <span><input type="search" id="pb-q" placeholder="author, title, journal…" size="20" aria-label="Search publications" /></span>
+        <span class="pb-count" id="pb-count">{countText(pubs)}</span>
+      </div>
       <div id="publications" set:html={html.publications} />
       <h2>Lectures/Presentations</h2>
       <div id="lectures" set:html={html.lectures} />
@@ -34,9 +42,44 @@ const html = renderAll({
   </section>
 </Base>
 
+<script is:inline type="application/json" id="pb-data" set:html={JSON.stringify(pubs).replace(/</g, '\\u003c')}></script>
+
 <script>
-  // Read the sheets again in the browser, so changes show up straight away.
-  import { SHEETS, parseCSV, renderAll } from '../lib/dissemination.js';
+  // Read the sheets again in the browser, so changes show up straight away,
+  // and run the publication filters.
+  import { SHEETS, parseCSV, renderAll, esc, TYPE_ORDER, TYPE_LABEL, publicationsHtml, filterPublications, countText } from '../lib/dissemination.js';
+  const $ = (id) => document.getElementById(id);
+  let pubs = JSON.parse($('pb-data').textContent);
+
+  function apply() {
+    const hit = filterPublications(pubs, {
+      type: $('pb-type').value, from: Number($('pb-from').value), to: Number($('pb-to').value), q: $('pb-q').value,
+    });
+    $('pb-count').textContent = countText(hit);
+    $('publications').innerHTML = publicationsHtml(hit, $('pb-group').value);
+  }
+
+  function controls() {
+    const keepType = $('pb-type').value;
+    const types = [...new Set(pubs.map((r) => String(r.type || '').toLowerCase()).filter(Boolean))]
+      .sort((a, b) => (TYPE_ORDER.indexOf(a) + 1 || 99) - (TYPE_ORDER.indexOf(b) + 1 || 99));
+    $('pb-type').innerHTML = '<option value="">all</option>' + types.map((t) => `<option value="${esc(t)}">${esc(TYPE_LABEL[t] || t)}</option>`).join('');
+    $('pb-type').value = types.includes(keepType) ? keepType : '';
+    const years = pubs.map((r) => parseInt(r.year, 10)).filter((y) => y > 1900);
+    const lo = Math.min(...years), hi = Math.max(...years);
+    let opts = '';
+    for (let y = hi; y >= lo; y--) opts += `<option>${y}</option>`;
+    // Keep a range the visitor already chose, if those years still exist.
+    const keepFrom = $('pb-from').value, keepTo = $('pb-to').value;
+    $('pb-from').innerHTML = opts; $('pb-to').innerHTML = opts;
+    $('pb-from').value = years.includes(Number(keepFrom)) ? keepFrom : String(lo);
+    $('pb-to').value = years.includes(Number(keepTo)) ? keepTo : String(hi);
+  }
+
+  controls();
+  for (const id of ['pb-group', 'pb-type', 'pb-from', 'pb-to']) $(id).addEventListener('change', apply);
+  $('pb-q').addEventListener('input', apply);
+
   (async () => {
     const keys = ['publications', 'lectures', 'events'];
     const rows = {};
@@ -49,6 +92,10 @@ const html = renderAll({
       } catch { return; }
     }
     const html = renderAll(rows);
-    for (const k of keys) document.getElementById(k).innerHTML = html[k];
+    $('lectures').innerHTML = html.lectures;
+    $('events').innerHTML = html.events;
+    pubs = rows.publications;
+    controls();
+    apply();
   })();
 </script>

@@ -92,9 +92,61 @@ const byDate = (a, b) => String(b.date).localeCompare(String(a.date));
 // Newest year first; within a year the order of the sheet stays.
 const byYear = (a, b) => (parseInt(b.year, 10) || 9999) - (parseInt(a.year, 10) || 9999);
 
+// ---------- publications filter bar (as on lucnijs.be, without Role) ----------
+export const TYPE_ORDER = ['journal article', 'book', 'book chapter', 'conference paper',
+  'editorial', 'professional article', 'report', 'thesis'];
+export const TYPE_LABEL = {
+  'journal article': 'Journal articles',
+  book: 'Books',
+  'book chapter': 'Book chapters',
+  'conference paper': 'Conference papers',
+  editorial: 'Editorials',
+  'professional article': 'Professional and practitioner articles',
+  report: 'Reports',
+  thesis: 'Theses',
+};
+const typeOf = (r) => String(r.type || '').toLowerCase();
+
+// Grouped list: mode 'year' (newest first) or 'type'.
+export function publicationsHtml(recs, mode = 'year') {
+  const buckets = new Map();
+  for (const r of recs) {
+    const k = mode === 'type' ? (typeOf(r) || 'other') : (/^\d{4}/.test(r.year) ? r.year.slice(0, 4) : 'Undated / forthcoming');
+    if (!buckets.has(k)) buckets.set(k, []);
+    buckets.get(k).push(r);
+  }
+  const keys = [...buckets.keys()].sort(mode === 'type'
+    ? (a, b) => (TYPE_ORDER.indexOf(a) + 1 || 99) - (TYPE_ORDER.indexOf(b) + 1 || 99)
+    : (a, b) => (!/^\d/.test(a) ? -1 : !/^\d/.test(b) ? 1 : Number(b) - Number(a)));
+  const out = [];
+  for (const k of keys) {
+    const items = buckets.get(k).sort(byYear);
+    const label = mode === 'type' ? (TYPE_LABEL[k] || k) : k;
+    out.push(`<p class="group">${esc(label)} <span>${items.length}</span></p>`);
+    out.push(items.map(publication).join(''));
+  }
+  return out.join('') || '<p class="item none">Nothing matches these filters.</p>';
+}
+
+export function filterPublications(recs, { type = '', from = 0, to = 9999, q = '' } = {}) {
+  q = q.trim().toLowerCase();
+  return recs.filter((r) => {
+    if (type && typeOf(r) !== type) return false;
+    const y = parseInt(r.year, 10);
+    if (y && (y < from || y > to)) return false;   // undated items always stay
+    if (q && ![r.authors, r.title, r.venue, r.details, r.type, r.year, r.doi].join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+export function countText(recs) {
+  const withDoi = recs.filter((r) => r.doi).length;
+  return `${recs.length} publication${recs.length === 1 ? '' : 's'} · ${withDoi} with DOI`;
+}
+
 export function renderAll({ publications, lectures, events }) {
   return {
-    publications: [...publications].sort(byYear).map(publication).join(''),
+    publications: publicationsHtml(publications, 'year'),
     lectures: [...lectures].sort(byDate).map(lecture).join(''),
     events: [...events].sort(byDate).map(event).join(''),
   };

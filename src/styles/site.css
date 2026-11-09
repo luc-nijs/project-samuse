@@ -207,6 +207,18 @@ p { margin: 0; }
 .diss .item a:hover { text-decoration: underline; }
 .diss .item .date { font-weight: 800; }
 .diss .item i { font-style: italic; }
+.diss .pb-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: -8px 0 22px; font-size: 14px; }
+.diss .pb-controls label { color: #666; margin-right: 6px; }
+.diss .pb-controls label.to { margin-left: 6px; }
+.diss .pb-controls select, .diss .pb-controls input {
+  font: 300 14px var(--sans); color: #000; background: #fff; border: 1px solid #c9c6c6; border-radius: 0; padding: 5px 8px;
+}
+.diss .pb-controls select:focus, .diss .pb-controls input:focus { outline: 2px solid var(--rust); outline-offset: -1px; }
+.diss .pb-count { margin-left: auto; color: #666; }
+.diss .group { font: 700 15px/1.4 var(--sans); border-bottom: 1px solid #d8d5d5; padding-bottom: 4px; margin: 22px 0 14px; }
+.diss .group:first-child { margin-top: 0; }
+.diss .group span { color: #888; font-weight: 300; font-size: 13px; }
+.diss .item.none { color: #666; }
 
 /* ---------- team ---------- */
 .team { padding: 22px 0 40px; }
