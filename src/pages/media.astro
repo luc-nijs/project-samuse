@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+const photos = Array.from({ length: 23 }, (_, i) => `/images/media/symposium-${String(i + 1).padStart(2, '0')}.jpg`);
+---
+<Base title="Media Symposium 2026" path="/media">
+  <section class="media-top">
+    <div class="wrap">
+      <h2>26-27 January 2026, Belval (LU)<br />Methodological Challenges and Perspectives in Multimodal Music Performance Research</h2>
+      <h3>Photos</h3>
+    </div>
+  </section>
+  <section class="slider wrap">
+    <button class="prev" type="button" aria-label="Previous photo">‹</button>
+    <div class="track">
+      {photos.map((src, i) => <img src={src} alt="" loading={i < 3 ? 'eager' : 'lazy'} />)}
+    </div>
+    <button class="next" type="button" aria-label="Next photo">›</button>
+  </section>
+  <script is:inline>
+    document.querySelectorAll('.slider').forEach(function (s) {
+      var t = s.querySelector('.track');
+      var step = function (d) { t.scrollBy({ left: d * t.clientWidth * 0.6, behavior: 'smooth' }); };
+      s.querySelector('.prev').addEventListener('click', function () { step(-1); });
+      s.querySelector('.next').addEventListener('click', function () { step(1); });
+    });
+  </script>
+</Base>

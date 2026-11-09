@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+
+const keynotes = [
+  { name: 'Dr. Giacomo Novembre', img: 'keynote-novembre', talk: 'Methodological challenges and innovations in the neuroscience of music, dance and social interaction', video: 'https://youtu.be/dddp_1zX9p0' },
+  { name: 'Dr. George Waddell', img: 'keynote-waddell', talk: 'Decoding Performance: Capturing, Analysing, Evaluating, and Enhancing Performance', video: 'https://youtu.be/kFRlsMINLdg' },
+  { name: 'Dr. Laura Bishop', img: 'keynote-bishop', talk: 'Capturing bodily expressivity and coordination in classical ensemble playing', video: 'https://youtu.be/-yPPV6n2iIM', slides: '/files/bishop-slides.pdf' },
+  { name: 'Dr. Inès Chihi', img: 'keynote-chihi', talk: 'When Sensors Learn to Fix Themselves for an AI Beyond Listening' },
+  { name: 'Dr. Ernest Kamavuako', img: 'keynote-kamavuako', talk: 'Making Sense of Sensors: Methodological Considerations in Biomechanical and Physiological Sensor Fusion' },
+  { name: 'Dr. Saravanakumar Duraisamy', img: 'keynote-duraisamy', talk: 'Shining Light on the Musical Mind: Exploring Brain Activity in Real Performance with fNIRS' },
+];
+
+// Two columns, in the order of the Wix page (left column, then right column).
+const phd = [
+  [
+    { name: 'David Perpetuini', talk: 'Psychophysiological monitoring of music performance anxiety and cognitive load through Thermography and functional Near-Infrared Spectroscopy.', video: 'https://youtu.be/qv-cFQbZa74', slides: '/files/perpetuini-slides.pdf' },
+    { name: 'Laura Serra', talk: 'Embodiment indicators of music expertise: psychophysiological and biomechanical markers of music skill acquisition.', video: 'https://youtu.be/1BsH5Qmtvo8', slides: '/files/260115_SAMUSEExperiments.pptx' },
+    { name: 'Ivan Pilkov', talk: 'Investigating human learning and control in piano performances.' },
+    { name: 'Canan Gener', talk: 'Enacting Social Intention in Ensemble Performance: A Multimodal Framework for' },
+  ],
+  [
+    { name: 'Pedro Palhares', talk: 'A musical exploration of consciousness: Mind wandering, creativity, and brain dynamics', slides: '/files/palhares-slides.pdf' },
+    { name: 'Davide Lionetti', talk: 'SynchMuse: a novel paradigm to study embodied coordination in musical ensembles using virtual avatars', video: 'https://youtu.be/e3rTGqlg6TU', slides: '/files/lionetti-slides.pdf' },
+    { name: 'Cobi Ashkenazi', talk: 'Beyond tension and relaxation: Optimizing antagonistic muscular co-contraction (AMCC) for skilled, healthy piano technique', video: 'https://youtu.be/KvkXl2VRdHo' },
+    { name: 'Sara Abalde', talk: 'On the role of ancillary body movements in interpersonal synchronization during joint music making.' },
+  ],
+];
+const ext = (u) => /^https?:/.test(u) ? { target: '_blank', rel: 'noopener' } : {};
+---
+<Base title="Symposium 2026" path="/symposium">
+  <section class="sym-top">
+    <div class="wrap">
+      <div class="box">
+        <h1>26-27 January 2026, Belval (LU)<br />Methodological Challenges and Perspectives in Multimodal Music Performance Research</h1>
+        <div class="cols">
+          <div>
+            <p><b>Music performance </b>is a complex, multimodal activity that relies on a highly coordinated interplay of cognitive, emotional, and motor processes. </p>
+            <p>Fully understanding <b>this dynamic act</b> requires methodological approaches capable of capturing, analysing, and interpreting these dimensions. </p>
+            <p><b>Psychophysiological and biomechanical methods</b>, among others, offer valuable insights into the mechanisms underlying music performance; however, each technique introduces additional layers of complexity related to data acquisition, processing, and interpretation, while also raising challenges regarding ecological validity in experimental contexts. </p>
+          </div>
+          <div>
+            <p>This <b>two-day workshop</b> brings together leading researchers with expertise in these methodological approaches to examine conceptual and methodological issues associated with integrating psychophysiological and biomechanical data, including advanced analytical techniques and computational modelling. </p>
+            <p>In <b>fostering dialogue across musicology, neuroscience, engineering, and computer science</b>, the workshop aims to promote interdisciplinary collaboration and define future research directions. By addressing these challenges, the symposium seeks to <b>advance our understanding of the complexities of music performance</b> and support the development of integrated, ecologically valid research methodologies.</p>
+          </div>
+        </div>
+        <div class="sym-btns">
+          <a class="btn line" href="#keynotes">Keynote Speakers</a>
+          <a class="btn line" href="#phd">PhD Talks</a>
+          <a class="btn line" href="/keynotes-abstracts">Abstracts Keynotes</a>
+          <a class="btn line" href="/phd-abstracts">Abstracts PhD Talks</a>
+          <a class="btn line" href="/schedule">Schedule</a>
+          <a class="btn line" href="/media">Media</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="keynotes" id="keynotes">
+    <div class="wrap">
+      <h2 class="title">Keynote Speakers</h2>
+      <p class="intro">During the Symposium we had the pleasure to host six internationally renowned researchers across neuroscience, music, engineering, and computer science.<br />In this page, you can read the abstract or the slides, and watch the video of their presentation.</p>
+      {keynotes.map((k) => (
+        <div class="speaker">
+          <img src={`/images/${k.img}.jpg`} alt={k.name} loading="lazy" />
+          <div class="info">
+            <p class="name">{k.name}</p>
+            <p class="talk">{k.talk}</p>
+            <div class="links">
+              <p><a href="/keynotes-abstracts">Abstract</a></p>
+              <p>{k.video ? <a href={k.video} {...ext(k.video)}>Presentation (video)</a> : 'Presentation (video)'}</p>
+              <p>{k.slides ? <a href={k.slides} target="_blank" rel="noopener">Presentation (slides)</a> : 'Presentation (slides)'}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="phd" id="phd">
+    <div class="wrap">
+      <h2 class="title">PhD Talks</h2>
+      <p class="intro">We welcome eight PhD students studying at different universities and labs from Belgium, Italy, Luxembourg, Portugal, and the United Kingdom. Here you can read their abstracts and listen to their talks.</p>
+    </div>
+    <div class="phd-grid wrap">
+      <div class="grid">
+        {phd.map((col) => (
+          <div style="display:grid;gap:40px;align-content:start">
+            {col.map((p) => (
+              <div class="phd-card">
+                <p class="name">{p.name}</p>
+                <p class="talk">{p.talk}</p>
+                <p class="links">
+                  <a href="/phd-abstracts">Abstract</a>
+                  {p.video ? <a href={p.video} {...ext(p.video)}>Video</a> : <span>Video</span>}
+                  {p.slides ? <a href={p.slides} target="_blank" rel="noopener">Slides</a> : <span>Slides</span>}
+                </p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

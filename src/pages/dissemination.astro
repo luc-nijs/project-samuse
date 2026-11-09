@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import { SHEETS, parseCSV, renderAll } from '../lib/dissemination.js';
+import pubCsv from '../data/SAMUSE_publications.csv?raw';
+import lecCsv from '../data/SAMUSE_lectures.csv?raw';
+import evCsv from '../data/SAMUSE_events.csv?raw';
+
+// At build time, read the live sheets; if one can't be reached, use the copy in src/data.
+async function load(url, fallback) {
+  if (url) {
+    try {
+      const r = await fetch(url);
+      if (r.ok) return parseCSV(await r.text());
+    } catch {}
+  }
+  return parseCSV(fallback);
+}
+const html = renderAll({
+  publications: await load(SHEETS.publications, pubCsv),
+  lectures: await load(SHEETS.lectures, lecCsv),
+  events: await load(SHEETS.events, evCsv),
+});
+---
+<Base title="Dissemination" path="/dissemination">
+  <section class="diss">
+    <div class="wrap">
+      <h2>Publications</h2>
+      <div id="publications" set:html={html.publications} />
+      <h2>Lectures/Presentations</h2>
+      <div id="lectures" set:html={html.lectures} />
+      <h2>Events</h2>
+      <div id="events" set:html={html.events} />
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Read the sheets again in the browser, so changes show up straight away.
+  import { SHEETS, parseCSV, renderAll } from '../lib/dissemination.js';
+  (async () => {
+    const keys = ['publications', 'lectures', 'events'];
+    const rows = {};
+    for (const k of keys) {
+      if (!SHEETS[k]) return;
+      try {
+        const r = await fetch(SHEETS[k], { cache: 'no-store' });
+        if (!r.ok) return;
+        rows[k] = parseCSV(await r.text());
+      } catch { return; }
+    }
+    const html = renderAll(rows);
+    for (const k of keys) document.getElementById(k).innerHTML = html[k];
+  })();
+</script>

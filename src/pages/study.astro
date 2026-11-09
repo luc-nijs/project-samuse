@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { JOIN_FORM } from '../data/nav.js';
+---
+<Base title="Study" path="/study">
+  <section class="study">
+    <div class="wrap">
+      <a class="btn dark" href={JOIN_FORM} target="_blank" rel="noopener" style="width:304px">Join our study - Register your interest</a>
+      <div class="row">
+        <a class="btn line" href="/consent">Informed consent</a>
+        <a class="btn line" href="/questionnaires">Questionnaires</a>
+        <a class="btn line" href="/scores">Scores</a>
+      </div>
+      <img src="/images/skill-levels.png" alt="Skill levels in Luxembourg" width="609" height="239" />
+    </div>
+  </section>
+</Base>

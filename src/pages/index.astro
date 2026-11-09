@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { JOIN_FORM } from '../data/nav.js';
+---
+<Base title="Home" path="/">
+  <section class="hl">
+    <div class="wrap">
+      <h2>Highlights</h2>
+      <p class="sub">SAMuSE project</p>
+      <div class="cards">
+        <p class="card">SAMUSE pioneers an <b>integrative framework</b> combining motion, muscle, brain, physiological, and experiential data to model <b>how musical performance skills develop </b>across five expertise levels</p>
+        <p class="card pink">By identifying <b>psychophysiological embodiment indicators</b> linked to skill levels, the project aims to develop <b>data-informed teaching strategies</b> that support both performance quality and musician well-being.</p>
+        <p class="card">Uniting music education, engineering, and computer science, SAMUSE advances <b>embodied music cognition, wearable sensor technology, and multimodal AI</b>, with outcomes relevant beyond music to sports, health, and human–computer interaction</p>
+      </div>
+      <div class="social">
+        <a href="https://www.instagram.com/bemunilu/" target="_blank" rel="noopener"><img src="/images/icon-instagram.png" alt="Instagram" width="24" height="24" /></a>
+        <a href="https://www.linkedin.com/posts/lucnijs_audacity-ias-instituteforadvancedstudies-activity-7411369844744511488-0QXZ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAF428BABPaUf64oZZOSBryhBfY-TXLeOgPA" target="_blank" rel="noopener"><img src="/images/icon-linkedin.png" alt="LinkedIn" width="24" height="24" /></a>
+        <a href="tel:+33775727274"><img src="/images/icon-whatsapp.png" alt="Whatsapp" width="24" height="24" /></a>
+      </div>
+      <p class="join"><a class="btn wide" href={JOIN_FORM} target="_blank" rel="noopener">Join our study - Register your interest</a></p>
+    </div>
+  </section>
+
+  <section class="video-block">
+    <div class="wrap">
+      <video controls preload="metadata" playsinline src="/video/samuse.mp4"></video>
+      <p class="credit">Video: UniLu Media Center & Bahareh Behzadaval</p>
+      <p class="fr">video with FRENCH subtitles: click <a href="/video">HERE</a></p>
+      <p class="join"><a class="btn wide" href={JOIN_FORM} target="_blank" rel="noopener">Join our study - Register your interest</a></p>
+    </div>
+  </section>
+</Base>

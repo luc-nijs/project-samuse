@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="video" path="/video">
+  <section class="videos-page">
+    <div class="wrap">
+      <video controls preload="metadata" playsinline src="/video/samuse.mp4"></video>
+      <p class="fr">👇 Video with French subtitles 👇</p>
+      <video controls preload="metadata" playsinline src="/video/samuse-fr.mp4"></video>
+    </div>
+  </section>
+</Base>

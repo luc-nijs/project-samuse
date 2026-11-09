@@ -1,0 +1,89 @@
+---
+import '../styles/site.css';
+import { nav } from '../data/nav.js';
+
+interface Props { title: string; description?: string; path: string; noindex?: boolean }
+const { title, description = 'This is the website on the SAMuSe interdisciplinary research project "Analysis of Skills Acquisition in Music Performance through a Multi-Sensing Approach". This project is funded by the IAS - Institute for Advanced Studies at the University of Luxembourg', path, noindex = false } = Astro.props;
+
+const site = Astro.site ?? 'https://www.project-samuse.lu';
+const canonical = new URL(path === '/' ? '/' : `${path}/`, site).href;
+const fullTitle = path === '/' ? 'Samuse | music research' : `${title} | Samuse`;
+
+// A page in a dropdown keeps its parent highlighted.
+const isOn = (item) => item.href === path || (item.children ?? []).some((c) => c.href === path);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="university of luxembourg, IAS, Institute for advanced studies, music performance research, music performance, music skill acquisition, interdisciplinary research, multisensing, multimodal" />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SAMuSe" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/images/scrolls-bg.jpg', site).href} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,700;0,6..12,800;1,6..12,300&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <p class="brand"><a href="/">SAMuSe</a></p>
+      <p class="tagline">Analysis of <em>S</em>kills <em>A</em>cquisition in Music Performance through a <em>Mu</em>lti-<em>Se</em>nsing Approach</p>
+      <nav class="menu" aria-label="Site">
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-list">Menu</button>
+        <ul id="menu-list">
+          {nav.map((item) => (
+            <li class:list={[{ on: isOn(item), 'has-sub': item.children }]}>
+              <a href={item.href} aria-current={item.href === path ? 'page' : undefined}>{item.label}</a>
+              {item.children && (
+                <ul class="sub">
+                  {item.children.map((c) => (
+                    <li><a href={c.href} aria-current={c.href === path ? 'page' : undefined}>{c.label}</a></li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="rule"></div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="logos">
+        <img src="/images/logo-unilu.jpg" alt="Université du Luxembourg" width="93" height="56" />
+        <span class="ias"><img src="/images/logo-unilu.jpg" alt="" width="93" height="56" /><span class="ias-crop"><img src="/images/logo-ias.png" alt="Institute for Advanced Studies (IAS)" width="356" height="56" /></span></span>
+        <img src="/images/logo-audacity.png" alt="Audacity project" width="88" height="71" class="audacity" />
+      </div>
+      <p>Copyright © Université du Luxembourg 2025. All rights reserved</p>
+    </footer>
+
+    <!-- Statcounter, as on the Wix site (project 13193731) -->
+    <script is:inline>var sc_project = 13193731; var sc_invisible = 1; var sc_security = 'd9aebcf6';</script>
+    <script is:inline async src="https://www.statcounter.com/counter/counter.js"></script>
+
+    <script is:inline>
+      // Phone menu: open and close the list.
+      (function () {
+        var b = document.querySelector('.menu-toggle');
+        if (!b) return;
+        b.addEventListener('click', function () {
+          var open = b.getAttribute('aria-expanded') === 'true';
+          b.setAttribute('aria-expanded', String(!open));
+          document.querySelector('.menu').classList.toggle('open', !open);
+        });
+      })();
+    </script>
+  </body>
+</html>

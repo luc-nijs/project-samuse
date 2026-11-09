@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+
+// lines: the text under the name; '' is an empty line, as on the Wix page.
+// links: [label, address].
+const pis = [
+  { name: 'Luc Nijs', img: 'team-luc-nijs.jpg', lines: ['', 'Associate Professor in Early Childhood Music Education', 'Department of Education and Social Work', ''], links: [['UniLu webpage', 'https://www.uni.lu/fhse-en/people/luc-nijs/']] },
+  { name: 'Ines Chihi', img: 'team-ines-chihi.jpg', lines: ['', 'Assistant Professor in Electrical Measurement and Sensor Technology', 'Department of Engineering', ''], links: [['UniLu webpage', 'https://www.uni.lu/fstm-en/people/ines-chihi/']] },
+  { name: 'Luis Leiva', img: 'team-luis-leiva.jpg', lines: ['', 'Assistant Professor in Computer Science', 'Department of Computer Science', ''], links: [['personal page', 'https://luis.leiva.name/web/'], ['UniLu webpage', 'https://www.uni.lu/fstm-en/people/luis-a-leiva/']] },
+];
+const phds = [
+  { name: 'Laura Serra Marin', img: 'team-laura-serra.jpg', lines: ['', 'PhD student', 'Department of Education and Social Work', ''], links: [['UniLu webpage', 'https://www.uni.lu/fhse-en/people/laura-serra-marin/']] },
+  { name: 'Hajer Gammoudi', img: 'team-hajer-gammoudi.jpg', lines: ['', 'PhD student', 'Department of Engineering', ''], links: [['UniLu webpage', 'https://www.uni.lu/fstm-en/people/hajer-gammoudi/']] },
+];
+// Collaborators sit in two columns.
+const collaborators = [
+  { name: 'Saravanakumar Duraisamy', img: 'team-saravanakumar-duraisamy.jpg', lines: ['', 'Postdoctoral researcher', 'Department of Computer Science', ''], links: [['UniLu webpage', 'https://www.uni.lu/fstm-en/people/saravanakumar-duraisamy/']] },
+  { name: 'Adriaan Campo', img: 'team-adriaan-campo.png', lines: ['Postdoctoral researcher', 'IPEM', 'Ghent University'], links: [] },
+  { name: 'Eugénie Joséphine Marie Delaunay', img: 'team-eugenie-delaunay.png', lines: ['', 'Master student', 'Department of Computer Science'], links: [] },
+  { name: 'Mattia Rosso', img: 'team-mattia-rosso.png', lines: ['Postdoctoral researcher', 'Department of Clinical Medicine - ', 'Center for Music In the Brain', 'Aarhus University', ''], links: [['Aarhus webpage', 'https://www.au.dk/en/mattia.rosso@clin.au.dk']] },
+];
+---
+<Base title="Team" path="/team">
+  <section class="team">
+    <div class="wrap">
+      <div class="team-btns">
+        <a class="btn line" href="#pis">Principal Investigators</a>
+        <a class="btn line" href="#phds">PhD Students</a>
+        <a class="btn line" href="#collaborators">Collaborators</a>
+      </div>
+
+      <h2 id="pis">Principal Investigators</h2>
+      {pis.map((p) => (
+        <div class="person">
+          <img src={`/images/${p.img}`} alt={p.name} loading="lazy" />
+          <div class="lines">
+            <p class="name">{p.name}</p>
+            {p.lines.slice(1).map((l) => <p>{l}</p>)}
+            {p.links.map(([label, href]) => <p><a href={href} target="_blank" rel="noopener">{label}</a></p>)}
+          </div>
+        </div>
+      ))}
+
+      <h2 id="phds">PhD Students</h2>
+      {phds.map((p) => (
+        <div class="person">
+          <img src={`/images/${p.img}`} alt={p.name} loading="lazy" />
+          <div class="lines">
+            <p class="name">{p.name}</p>
+            {p.lines.slice(1).map((l) => <p>{l}</p>)}
+            {p.links.map(([label, href]) => <p><a href={href} target="_blank" rel="noopener">{label}</a></p>)}
+          </div>
+        </div>
+      ))}
+
+      <h2 id="collaborators">Collaborators</h2>
+      <div class="people-2">
+        {collaborators.map((p) => (
+          <div class="person">
+            <img src={`/images/${p.img}`} alt={p.name} loading="lazy" />
+            <div class="lines">
+              <p class="name" style={p.lines[0] ? 'margin-bottom:0' : ''}>{p.name}</p>
+              {(p.lines[0] ? p.lines : p.lines.slice(1)).map((l) => <p>{l}</p>)}
+              {p.links.map(([label, href]) => <p><a href={href} target="_blank" rel="noopener">{label}</a></p>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
